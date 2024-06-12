@@ -5,6 +5,7 @@ from . import views
 app_name = "Authenticator"
 
 urlpatterns = [
-    path("/api/register-user", views.index, name="index"),
-    path("Authenticator/login.html", views.login, name="login")
+    path('', views.index, name="index"),
+    path('Authenticator/login.html', views.login, name="login"),
+    path('Welcome/index.html', include('Welcome.urls'))
 ]

@@ -4,7 +4,7 @@ from django.db import models
 class Person(models.Model):
   uuid = models.IntegerField(auto_created=True, unique=True)
   name = models.CharField(max_length=20)
-  email = models.CharField(max_length=30)
+  email = models.CharField(max_length=30, unique=True)
   annual_income = models.IntegerField()
   password = models.CharField(max_length=8)
 
