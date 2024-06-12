@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<head>
+    <title>Credit Service</title>
+</head>
+<body>
+    <section>
+        <h1>
+            Credit Service
+        </h1>
+        <form method="post">
+            <label for="email">Email</label>
+            <input name="email">
+            <label for="password"></label>
+            <input type="password" name="password">
+            <input type="button" value="Submit">
+        </form>
+        <p>
+            {% if messages %}
+                {{ messages[0] }}
+        </p>
+    </section>
+</body>

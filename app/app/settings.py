@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'Authenticator',
+    'Welcome', # To be removed later
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
