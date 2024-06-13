@@ -11,4 +11,6 @@ Requirements for second iteration:
     - All EMIs due on scheduled dates
     - loan amount should not exceed 5000/-,
     - annual income should be greater than 150000,
+    - credit score should be greater than or equal to 
+      450
 3. Show message after giving out a loan.

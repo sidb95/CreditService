@@ -16,3 +16,4 @@ class Loan(models.Model):
 
 class SavedState(models.Model):
   uuid = models.IntegerField(null=False)
+  sid = models.IntegerField(default=1, null=False)

@@ -35,12 +35,11 @@ class LoanService():
     return ((3 / 100) * loan_amt) + (round((apr / 365)) * billing_days)
 
   # function ```validate_request```
-  def validate_request(self, params):
+  def validate_request(self, params, annual_income):
     keys = ['loan_type', 'loan_amount', 'interest_rate', 'term_period', 
             'disbursement_date']
     loan_amt = int(params['loan_amount'])
     interest_rate = int(params['interest_rate'])
-    annual_income = int(params['annual_income'])
     if (self.isNULL(params, keys)):
       return False # Any key in keys is NULL
     elif (interest_rate < 12):

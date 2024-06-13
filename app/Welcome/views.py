@@ -18,31 +18,23 @@ def get_params_get(request, keys):
 
 # function ```apply_loan```
 def apply_loan(request):
-  if request.method == "POST":
-    loan_service = LoanService()
-    uid = len(Loan.objects.all()) + 1
-    keys = ['loan_type', 'loan_amount', 'interest_rate', 'term_period', 'disbursement_date']
+  if request.method == "GET":
+    try:
+      params = get_params_get(request, ['uuid', 'sid', 'messages'])
+      if params['sid'] is None or params['sid'] == "":
+        return redirect('Authenticator:login')
+      else:
+        return render(request, 'Welcome/apply_loan.html', params)
+    except ValueError as err:
+      print("Handling illegal request", err)
+      messages.info(request, "Authentication unsuccessful")
+      return redirect(request, 'Authenticator:login')
+  else:
     no1 = len(SavedState.objects.all())
     ss = (SavedState.objects.all()[no1 - 1])
     uuid = ss.uuid
-    params = get_params(request, keys)
-    usr = Person.objects.get(uuid=uuid)
-    if usr is not None:
-      if loan_service.validate_request(params):
-        loan = Loan.objects.create(uid=uid, uuid=usr, loan_type=params['loan_type'],
-                        loan_amount=params['loan_amount'], 
-                        interest_rate=params['interest_rate'], 
-                        term_period=params['term_period'], 
-                        disbursement_date=params['disbursement_date'])
-        loan.save()
-        #
-        messages.info(request, "Loan entry created successfully")
-        return redirect(request, "Welcome:apply_loan")
-      else:
-        return redirect('Welcome:index')
-    else:
-      messages.info(request, "Authentication unsuccessful")
-      return redirect(request, 'Authenticator:login')
+    sid = ss.sid
+    return render(request, 'Welcome/apply_loan.html', {'uuid':uuid, 'sid':sid})
 
 
 # function ```index```
@@ -51,9 +43,9 @@ def index(request):
     try:
       params = get_params_get(request, ['sid', 'uuid'])
       if params['sid'] is None or params['sid'] == "":
-        redirect('Authenticator:login')
+        return redirect('Authenticator:login')
       else:
-        ss = SavedState.objects.create(uuid=params['uuid'])
+        ss = SavedState.objects.create(uuid=params['uuid'], sid=params['sid'])
         ss.save()
         return render(request, "Welcome/index.html", params)
     except ValueError as err:
@@ -61,4 +53,29 @@ def index(request):
       messages.info(request, "Authentication unsuccessful")
       return redirect(request, 'Authenticator:login')
   else:
-    return apply_loan(request)
+    loan_service = LoanService()
+    uid = len(Loan.objects.all()) + 1
+    keys = ['loan_type', 'loan_amount', 'interest_rate', 'term_period', 'disbursement_date']
+    no1 = len(SavedState.objects.all())
+    ss = (SavedState.objects.all()[no1 - 1])
+    uuid = ss.uuid
+    sid = ss.sid
+    params = get_params(request, keys)
+    usr = Person.objects.get(uuid=uuid)
+    if usr is not None:
+      if loan_service.validate_request(params, usr.annual_income):
+        loan = Loan.objects.create(uid=uid, uuid=usr, loan_type=params['loan_type'],
+                        loan_amount=params['loan_amount'], 
+                        interest_rate=params['interest_rate'], 
+                        term_period=params['term_period'], 
+                        disbursement_date=params['disbursement_date'])
+        loan.save()
+        #
+        messages.info(request, "Loan entry created successfully")
+        base_url = reverse('Welcome:apply_loan')
+        query_string = urlencode({'sid':sid, 'uuid':uuid, 'messages':messages})
+        url = '{}?{}'.format(base_url, query_string)
+        return redirect(url)
+    else:
+      messages.info(request, "Authentication unsuccessful")
+      return redirect(request, 'Authenticator:login')
