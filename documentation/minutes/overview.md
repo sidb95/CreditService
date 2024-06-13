@@ -9,7 +9,9 @@
 2. Create new branch, 2-CreditService-iter2,
 3. checkout to new branch,
 4. run SOC (1),
-5. run SOC (2)
+5. run SOC (2),
+6. Work on Welcome screen and url flow,
+7. run SOC (2),
 
 ```shell
 git branch 2-CreditService-iter2

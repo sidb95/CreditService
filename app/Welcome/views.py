@@ -12,11 +12,16 @@ def get_params_2(request, keys):
 
 def index(request):
   if request.method == "GET":
-    params = get_params_2(request, ['sid', 'uuid'])
-    if params['sid'] is None or params['sid'] == "":
-      return redirect('Authenticator:login')
-    else:
-      return render(request, "Welcome/index.html", params)
+    try:
+      params = get_params_2(request, ['sid', 'uuid'])
+      if params['sid'] is None or params['sid'] == "":
+        redirect('Authenticator:login')
+      else:
+        return render(request, "Welcome/index.html", params)
+    except ValueError as err:
+      print("Handling illegal request", err)
+      messages.info(request, "Authentication not successful")
+      return render(request, 'Authenticator/login.html')
   else:
     uid = len(Loan.objects.all()) + 1
     keys = ['uuid', 'loan_type', 'loan_amount', 'interest_rate', 'term_period', 

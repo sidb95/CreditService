@@ -16,17 +16,19 @@
             {% endfor %}
         </div>
         {% endif %}
-        <form method="post" action="{% url 'Authenticator:index' %}">
+        <form method="post" action="{% url 'Authenticator:index' %}" class="form">
             {% csrf_token %}
-            <label for="name">Name</label>
-            <input type="text" name="name">
-            <label for="email">Email</label>
-            <input type="text" name="email">
-            <label for="annual_income">Income</label>
-            <input type="text" name="annual_income">
-            <label for="password"></label>
-            <input type="password" name="password">
-            <input type="submit" value="Submit" class="btn btn-primary">
+            <div class="mb-3 mt-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" name="name" class="form-control">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" name="email" class="form-control">
+                <label for="annual_income" class="form-label">Income</label>
+                <input type="text" name="annual_income" class="form-control">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control">
+                <input type="submit" value="Submit" class="btn btn-primary">
+            </div>
         </form>
     </section>
 </body>

@@ -16,12 +16,12 @@
             {% endfor %}
         </div>
         {% endif %}
-        <form method="post" action="{% url 'Authenticator:login' %}">
+        <form method="post" action="{% url 'Authenticator:login' %}" class="form">
             {% csrf_token %}
-            <label for="email">Email</label>
-            <input name="email">
-            <label for="password"></label>
-            <input type="password" name="password">
+            <label for="email" class="form-label">Email</label>
+            <input name="email" class="form-control">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control">
             <input type="submit" value="Submit" class="btn btn-primary">
         </form>
     </section>

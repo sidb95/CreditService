@@ -24,7 +24,7 @@
         </div>
         {% endif %}
         <div id="loan_details">
-            <form action="{{ 'Welcome:index' }}" method="post" class="form">
+            <form action="{{ 'Welcome:index' }}" method="get" class="form">
                 <div class="mb-3 mt-3">
                     <label for="loan_type" class="form-label">Loan Type</label>
                     <input type="radio" name="loan_type" value="CREDIT">
@@ -39,13 +39,13 @@
                     <input type="number" name="interest_rate" class="form-control">
                     <br>
                     <label for="term_period" class="form-label">Term Period</label>
-                    <input type="month" name="term_period" class="form-control">
+                    <input type="number" name="term_period" class="form-control">
                     <br>
                     <label for="disbursement_date" class="form-label">Disbursement Date</label>
                     <input type="date" name="disbursement_date" class="form-control">
                     <br>
                 </div>
-                <input type="button" value="Submit" class="btn btn-primary" class="form-control">
+                <input type="submit" value="Submit" class="btn btn-primary" class="form-control">
             </form>
         </div>
     </section>
