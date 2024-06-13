@@ -44,4 +44,6 @@ Requirements:
                 - Amount_due
 
 2. Iteration 3 delieverables:
-    - 
+    - implement ```Payment``` class,
+    - implement ```Bill``` model class,
+    - Working APIs
