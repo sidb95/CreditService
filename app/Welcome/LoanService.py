@@ -6,7 +6,7 @@ those help apply loan to the customers.
 # class ```LoanService```
 class LoanService():
   
-  def __init__():
+  def __init__(self):
     pass
   
   # function ```calc_credit_score```

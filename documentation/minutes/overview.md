@@ -15,6 +15,10 @@
 8. Work on Welcome screen,
 9. create ```LoanService```,
 10. run SOC (4) (2),
+11. add model ```SavedState```,
+12. add view ```apply_loan```,
+13. modify views,
+14. run SOC (1) (2),
 
 ```shell
 # SOC (4)

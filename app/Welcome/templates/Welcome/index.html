@@ -24,7 +24,8 @@
         </div>
         {% endif %}
         <div id="loan_details">
-            <form action="{{ 'Welcome:index' }}" method="get" class="form">
+            <form method="post" action="{% url 'Welcome:apply_loan' %}" class="form">
+                {% csrf_token %}
                 <div class="mb-3 mt-3">
                     <label for="loan_type" class="form-label">Loan Type</label>
                     <input type="radio" name="loan_type" value="CREDIT">

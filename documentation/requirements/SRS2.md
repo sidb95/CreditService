@@ -9,4 +9,6 @@ Requirements for second iteration:
     - interest_rate >= 12%
     - cumulative interest per month > Rs 50
     - All EMIs due on scheduled dates
+    - loan amount should not exceed 5000/-,
+    - annual income should be greater than 150000,
 3. Show message after giving out a loan.
