@@ -22,6 +22,7 @@ class Bill(models.Model):
   bill_date = models.DateField(null=False)
   principal_due = models.IntegerField(default=0, null=False)
   min_due = models.IntegerField(default=0, null=False)
+  term = models.IntegerField(default=1, null=False,)
 
 
 class SavedState(models.Model):

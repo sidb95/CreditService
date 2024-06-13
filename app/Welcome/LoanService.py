@@ -78,6 +78,7 @@ class Payment(LoanService):
   def __init__(self, loan_id):
     super(self, loan_id) # calling the parent function (super)
     self.dateA = datetime.date(1970, 1, 1)
+    self.arr1 = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
   # function ```getLoanId```
   def getLoanId(self):
@@ -99,7 +100,7 @@ class Payment(LoanService):
         transactionA.append(interest_rate)
         transactionA.append(bill.amount)
         past_transactions.append(transactionA) # append in ```past_transactions```
-    return past_transactions # returning all the past transactions
+    return past_transactions # returns all the past transactions
 
   # function ```getDueDatesAuxA1```
   def getDueDatesAuxA1(self, dateB, lastDate):
@@ -108,31 +109,47 @@ class Payment(LoanService):
   
   # function ```getDueDatesAuxC1```
   def getDueDatesAuxC1(self, dateB, days_due):
-    return dateB
+    days_left = 31 - dateB.day
+    if days_left == 0:
+      return datetime.date(dateB.year, 12, 31)
+    elif days_left >= days_due:
+      return datetime.date(dateB.year, 12, dateB.day + days_due)
+    else:
+      return datetime.date(dateB.year + 1, 1, days_due - days_left)
   
   # function ```getDueDatesAuxC2```
   def getDueDatesAuxC2(self, dateB, days_due):
-    return dateB
+    days_left = self.arr1[dateB.month - 1] - dateB.day
+    if days_left == 0:
+      return datetime.date(dateB.year, dateB.month + 1, days_due)
+    elif days_left >= days_due:
+      return datetime.date(dateB.year, dateB.month, dateB.day + days_due)
+    else:
+      return datetime.date(dateB.year, dateB.month, days_due - days_left)
+  
+  # function ```getDueDatesAuxB2```
+  def getDueDatesAuxB2(self, dateB, days_due):
+    days_left = 29 - dateB.day
+    if days_left == 0:
+      return datetime.date(dateB.year, 3, days_due)
+    elif days_left >= days_due:
+      return datetime.date(dateB.year, 2, dateB.day + days_due)
+    else:
+      return datetime.date(dateB.year, 3, days_due - days_left)
 
   # function ```getDueDatesAuxB1```
   def getDueDatesAuxB1(self, dateB, days_due):
-    if dateB.month == 12: # if 
-      return datetime.date(dateB.year + 1, 1, days_due)
+    if dateB.month == 12:
+      return self.getDueDatesAuxC1(dateB, days_due)
     elif (dateB.year % 4 == 0):
       if dateB.month == 2:
-        days_left = 29 - dateB.day
-        if days_left == 0:
-          return datetime.date(dateB.year, 3, days_due)
-        elif days_left == days_due:
-          return datetime.date(dateB.year, 2, 29)
-        elif days_left > days_due:
-          return datetime.date(dateB.year, 2, dateB.day + days_due)
-        else:
-          return datetime.date(dateB.year, 3, days_due - days_left)
+        return self.getDueDatesAuxB2(dateB, days_due)
       elif dateB.month == 1 and dateB.day == 31 and days_due == 30:
-          return datetime.date(dateB.year, 3, 1)
+        return datetime.date(dateB.year, 3, 1)
+      elif dateB.month == 1 and dateB.day == 30 and days_due == 30:
+        return datetime.date(dateB.year, 2, 29)
       else:
-        return self.getDueDatesAuxC1(dateB, days_due)
+        return self.getDueDatesAuxC2(dateB, days_due)
     else:
       return self.getDueDatesAuxC2(dateB, days_due)
 
@@ -145,18 +162,36 @@ class Payment(LoanService):
     no1 = len(bills)
     interest_rate = loan.interest_rate
     principal_due = loan.loan_amount
-    days_due = 0
+    term_period = loan.term_period
     if no1 != 0:
       lastBill = bills[no1 - 1]
       principal_due = lastBill.principal_due
       days_due = self.getDueDatesAuxA1(dateB, lastBill.bill_date)
+      rem_term_period = term_period - lastBill.term
+      due_date = self.getDueDatesAuxB1(dateB, days_due)
+      min_due = lastBill.min_due
+      principal_due = lastBill.principal_due
       if days_due == 30:
-        dues.append([dateB, lastBill.min_due])
+        dues.append([dateB, min_due])
+        rem_term_period -= 1
       elif days_due < 30:
-        due_date = self.getDueDatesAuxB1(dateB, days_due)
-        dues.append([])
+        dues.append([due_date, min_due])
+        rem_term_period -= 1
+      elif days_due <= 45:
+        emi = self.calcEMI(principal_due, interest_rate, days_due - 30)
+        dues.append([due_date, min_due + emi])
+      else:
+        print("EMI not paid on time!")
+      emi = self.calcEMI(principal_due, interest_rate, 30)
+      while rem_term_period != 0:
+        due_date = self.getDueDatesAuxB1(due_date, 30)
+        dues.append([due_date, emi])
     else:
       days_due = self.getDueDatesAuxA1(dateB, loan.disbursement_date)
+      due_date = self.getDueDatesAuxB1(dateB, days_due)
+      emi = self.calcEMI(principal_due, interest_rate, 30)
+      dues.append([due_date, emi])
+    return dues # returns upcoming dues
 
   # function ```make_payment```
   def make_payment(self, amount):
@@ -165,6 +200,7 @@ class Payment(LoanService):
     bill = Bill.objects.create(uid=no_bills, loan_id=loan)
     bill.amount = amount
     bill.bill_date = self.dateA.today()
+    bill.term = no_bills
     if bill.min_due >= amount:
       bill.min_due -= amount
     else:
