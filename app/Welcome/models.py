@@ -14,6 +14,16 @@ class Loan(models.Model):
   term_period = models.IntegerField(null=False)
   disbursement_date = models.DateField(null=False)
 
+
+class Bill(models.Model):
+  uid = models.IntegerField(null=False)
+  loan_id = models.ForeignKey(Loan, on_delete=models.CASCADE)
+  amount = models.IntegerField(null=False)
+  bill_date = models.DateField(null=False)
+  principal_due = models.IntegerField(default=0, null=False)
+  min_due = models.IntegerField(default=0, null=False)
+
+
 class SavedState(models.Model):
   uuid = models.IntegerField(null=False)
   sid = models.IntegerField(default=1, null=False)
