@@ -6,14 +6,26 @@
 #### 13 June 2024
 
 1. Iteration 1 complete,
-2. Create new branch, 2-CreditService-iter2,
+2. Create new branch, 2-CreditService-iter2 (SOC (3)),
 3. checkout to new branch,
 4. run SOC (1),
 5. run SOC (2),
 6. Work on Welcome screen and url flow,
 7. run SOC (2),
+8. Work on Welcome screen,
+9. create ```LoanService```,
+10. run SOC (4) (2),
 
 ```shell
+# SOC (4)
+python3 manage.py flush
+
+# SOC (5)
+python3 manage.py runserver
+```
+
+```shell
+# SOC (3)
 git branch 2-CreditService-iter2
 git checkout 2-CreditService-iter2
 ```
