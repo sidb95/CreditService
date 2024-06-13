@@ -13,6 +13,7 @@ class LoanService():
   def __init__(self, loan_id):
     self.loan_id = loan_id
 
+  # function ```getLoanId```
   def getLoanId(self, loan_id):
     return self.loan_id
   
@@ -101,18 +102,39 @@ class Payment(LoanService):
     return past_transactions # returning all the past transactions
 
   # function ```getDueDatesAuxA1```
-  def getDueDatesAuxA1(dateB, lastDate):
+  def getDueDatesAuxA1(self, dateB, lastDate):
     deltaA = dateB - lastDate
     return deltaA.days
+  
+  # function ```getDueDatesAuxC1```
+  def getDueDatesAuxC1(self, dateB, days_due):
+    return dateB
+  
+  # function ```getDueDatesAuxC2```
+  def getDueDatesAuxC2(self, dateB, days_due):
+    return dateB
 
   # function ```getDueDatesAuxB1```
-  def getDueDatesAuxB1(dateB, days_due):
-    if dateB.days == 31:
-      if dateB.month == 12:
-        return datetime.date(dateB.year + 1, 1, days_due)
-      elif dateB.month == 2:
-        if (dateB.year % 4 == 0):
-          pass
+  def getDueDatesAuxB1(self, dateB, days_due):
+    if dateB.month == 12: # if 
+      return datetime.date(dateB.year + 1, 1, days_due)
+    elif (dateB.year % 4 == 0):
+      if dateB.month == 2:
+        days_left = 29 - dateB.day
+        if days_left == 0:
+          return datetime.date(dateB.year, 3, days_due)
+        elif days_left == days_due:
+          return datetime.date(dateB.year, 2, 29)
+        elif days_left > days_due:
+          return datetime.date(dateB.year, 2, dateB.day + days_due)
+        else:
+          return datetime.date(dateB.year, 3, days_due - days_left)
+      elif dateB.month == 1 and dateB.day == 31 and days_due == 30:
+          return datetime.date(dateB.year, 3, 1)
+      else:
+        return self.getDueDatesAuxC1(dateB, days_due)
+    else:
+      return self.getDueDatesAuxC2(dateB, days_due)
 
   # function ```getDueDates```
   def getDueDates(self):
@@ -127,16 +149,14 @@ class Payment(LoanService):
     if no1 != 0:
       lastBill = bills[no1 - 1]
       principal_due = lastBill.principal_due
-      days_due = getDueDatesAuxA1(dateB, lastBill.bill_date)
+      days_due = self.getDueDatesAuxA1(dateB, lastBill.bill_date)
       if days_due == 30:
         dues.append([dateB, lastBill.min_due])
       elif days_due < 30:
-        due_date = getDueDatesAuxB1(dateB, lastBill.bill_date)
-        
-          
+        due_date = self.getDueDatesAuxB1(dateB, days_due)
         dues.append([])
     else:
-      days_due = getDueDatesAuxA1(dateB, loan.disbursement_date)
+      days_due = self.getDueDatesAuxA1(dateB, loan.disbursement_date)
 
   # function ```make_payment```
   def make_payment(self, amount):
@@ -155,5 +175,3 @@ class Payment(LoanService):
       else:
         bill.principal_due -= left_off_amount
     bill.save()
-
-  
