@@ -9,13 +9,15 @@ class Authenticator():
     self.usr = usr
   
   def authenticate(self, password): 
-    if self.usr.uuid:
-      session = Session.objects.get(uuid=self.usr.uuid)
+    if self.usr.uuid is not None:
+      session = Session.objects.get(uuid=self.usr)
       if (password == self.usr.password):
         if session is None or session.sid == "":
           return ""
+        else:
+          return session.sid
       else:
-        return session.sid
+        return ""
     else:
       return ""    
 
@@ -38,7 +40,7 @@ def index(request):
                                 password=params["password"])
     usr.save()
     sid = len(Session.objects.all()) + 1
-    session = Session(uuid=usr, sid=sid)
+    session = Session.objects.create(uuid=usr, sid=sid)
     session.save()
     return redirect("Authenticator:login")
 
@@ -49,12 +51,12 @@ def login(request):
     return render(request, "Authenticator/login.html")
   else:
     params = get_params(request, ['email', 'password'])
-    usr = Person.objects.get(email=params["email"])
+    usr = Person.objects.get(email=params["email"])  
     auth = Authenticator(usr)
     session_id = auth.authenticate(params["password"])
     if session_id != "" and session_id is not None:
       context = {"sid": session_id}
-      return redirect("Welcome:index", context)
+      return redirect("Welcome:index")
     else:
       messages.info(request, 'Password incorrect')
       return render(request, "Authenticator/login.html")
