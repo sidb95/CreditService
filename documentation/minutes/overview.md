@@ -1,5 +1,16 @@
 # Overview
 
+#### 13 June 2024
+
+1. Iteration 1 complete,
+2. Create new branch, 2-CreditService-iter2,
+3. checkout to new branch,
+
+```shell
+git branch 2-CreditService-iter2
+git checkout 2-CreditService-iter2
+```
+
 #### 12 June 2024
 
 ITER 1:
