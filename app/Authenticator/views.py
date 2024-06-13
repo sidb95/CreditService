@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
+from urllib.parse import urlencode
+from django.urls import reverse
 from .models import Person, Session
 from django.contrib import messages
-
 
 class Authenticator():
   
@@ -55,8 +56,10 @@ def login(request):
     auth = Authenticator(usr)
     session_id = auth.authenticate(params["password"])
     if session_id != "" and session_id is not None:
-      context = {"sid": session_id}
-      return redirect("Welcome:index")
+      base_url = reverse('Welcome:index')
+      query_string = urlencode({'sid':session_id, 'uuid':usr.uuid})
+      url = '{}?{}'.format(base_url, query_string)
+      return redirect(url)
     else:
       messages.info(request, 'Password incorrect')
       return render(request, "Authenticator/login.html")

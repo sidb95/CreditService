@@ -9,5 +9,5 @@ app_name = "Authenticator"
 urlpatterns = [
     path('', views.index, name="index"),
     path('Authenticator/login.html', views.login, name="login"),
-    path('Welcome/index.html', welcome_views.index)
+    path('Welcome/index.html', welcome_views.index, name="index")
 ]

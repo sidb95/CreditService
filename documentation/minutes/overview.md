@@ -1,10 +1,15 @@
 # Overview
 
+### Appendix
+1. SOC: Sequence of Code
+
 #### 13 June 2024
 
 1. Iteration 1 complete,
 2. Create new branch, 2-CreditService-iter2,
 3. checkout to new branch,
+4. run SOC (1),
+5. run SOC (2)
 
 ```shell
 git branch 2-CreditService-iter2
