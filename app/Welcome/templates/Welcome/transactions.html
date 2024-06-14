@@ -12,7 +12,7 @@
             <span>{{ sid }}</span>
             <span>{{ uid }}</span>
             <button class="btn">
-                <a href="{% url 'Welcome:get_statement' %}?sid={{sid}}&uuid={{uuid}}">
+                <a href="{% url 'Welcome:index' %}?sid={{sid}}&uuid={{uuid}}">
                     Back
                 </a>
             </button>
@@ -32,9 +32,9 @@
                 </thead>
                 {% for transaction in past_transactions %}
                 <tr>
-                    {% for i in range(0, len(transaction)) %}
+                    {% for member in transaction %}
                     <td>
-                        {{ transaction[i] }}
+                        {{ member }}
                     </td>
                     {% endfor %}
                 </tr>
@@ -50,9 +50,9 @@
                     </thead>
                     {% for payment in due_payments %}
                     <tr>
-                        {% for i in range(0, len(payment)) %}
+                        {% for member in payment %}
                         <td>
-                            {{ payment[i] }}
+                            {{ member }}
                         </td>
                         {% endfor %}
                     </tr>

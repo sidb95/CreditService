@@ -76,7 +76,7 @@ class Payment(LoanService):
   
   # child ```init``` function
   def __init__(self, loan_id):
-    super(self, loan_id) # calling the parent function (super)
+    self.loan_id = loan_id
     self.dateA = datetime.date(1970, 1, 1)
     self.arr1 = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -87,7 +87,11 @@ class Payment(LoanService):
   # function ```getPastTransactions```
   def getPastTransactions(self):
     past_transactions = []
-    loan = Loan.objects.get(uid=self.getLoanId)
+    try:
+      loan = Loan.objects.get(uid=self.getLoanId())
+    except Loan.DoesNotExist as err:
+      print("Loan ID does not match", err)
+      return past_transactions
     interest_rate = loan.interest_rate
     bills = Bill.objects.all()
     if (len(bills) == 0):
@@ -157,7 +161,11 @@ class Payment(LoanService):
   def getDueDates(self):
     dateB = self.dateA.today()
     dues = []
-    loan = Loan.objects.get(uid=self.getLoanId)
+    try:
+      loan = Loan.objects.get(uid=self.getLoanId())
+    except Loan.DoesNotExist as err:
+      print("Loan ID does not match", err)
+      return dues
     bills = Bill.objects.all()
     no1 = len(bills)
     interest_rate = loan.interest_rate
@@ -195,7 +203,7 @@ class Payment(LoanService):
 
   # function ```make_payment```
   def make_payment(self, amount):
-    loan = Loan.objects.get(uid=self.getLoanId)
+    loan = Loan.objects.get(uid=self.getLoanId())
     no_bills = len(Bill.objects.all()) + 1
     bill = Bill.objects.create(uid=no_bills, loan_id=loan)
     bill.amount = amount
