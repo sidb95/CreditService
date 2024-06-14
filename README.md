@@ -15,4 +15,23 @@ How to run:
 5. login with the registered email-id, and password,
 6. Welcome page follows.
 
+Relevant Commands on bash:
 
+Installation Commands:
+```shell
+
+pip3 install djangorestframework
+  or
+python3 -m pip install djangorestframework
+
+pip3 install django-admin
+```
+
+Running the application:
+```shell
+cd app/
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py flush
+python3 manage.py runserver
+```
