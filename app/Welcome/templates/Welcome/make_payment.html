@@ -8,16 +8,29 @@
 </head>
 <body>
     <section>
-        <h1>
-            Credit Service
-        </h1>
         <div style="float:right">
             <span>{{ sid }}</span>
             <span>{{ uuid }}</span>
-            <button class="button"><a href="{% url 'Authenticator:login' %}">Logout</a></button>
+            <button class="btn"><a href="{% url 'Welcome:index' %}?sid={{sid}}&uuid={{uuid}}">Back</a></button>
+            <button class="btn"><a href="{% url 'Authenticator:login' %}">Logout</a></button>
         </div>
+        <h1>
+            Credit Service
+        </h1>
         <div id = "make_payment">
-            <form action="{% url {Welcome:make_payment} %}" method="post"></form>
+            <form action="{% url 'Welcome:make_payment' %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3 mt-3">
+                    <label for="loan_id">Loan Id</label>
+                    <input type="number" name="loan_id">
+                    <label for="amount">Amount</label>
+                    <input type="number" name="amount">
+                    <input type="submit" value="submit" class="btn btn-primary">
+                </div>
+            </form>
         </div>
     </section>
+    <footer style="text-align: center;">
+        Siddharth Bhatore
+    </footer>
 </body>

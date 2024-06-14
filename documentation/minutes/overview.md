@@ -8,7 +8,8 @@
 1. SOC (5),
 2. API (1): "localhost:8000/Authenticator/api/register-user"
 3. API (2): "localhost:8000/Welcome/api/apply-loan"
-3. API (3): "localhost:8000/Welcome/make-payment"
+4. API (3): "localhost:8000/Welcome/make-payment"
+5. SOC (2),
 
 ```shell
 # SOC (5)
