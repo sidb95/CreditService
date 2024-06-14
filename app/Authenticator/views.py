@@ -3,6 +3,8 @@ from urllib.parse import urlencode
 from django.urls import reverse
 from .models import Person, Session
 from django.contrib import messages
+from rest_framework import viewsets, permissions
+from .serializers import PersonSerializer
 
 class Authenticator():
   
@@ -20,7 +22,14 @@ class Authenticator():
       else:
         return ""
     else:
-      return ""    
+      return ""
+
+
+class PersonViewSet(viewsets.ModelViewSet):
+    
+    queryset = Person.objects.all().order_by('uuid')
+    serializer_class = PersonSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 def get_params(request, keys):

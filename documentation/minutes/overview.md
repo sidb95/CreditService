@@ -3,6 +3,20 @@
 ### Appendix
 1. SOC: Sequence of Code
 
+#### 14 June 2024
+
+1. SOC (5),
+2. API (1): "localhost:8000/Authenticator/api/register-user"
+3. API (2): "localhost:8000/Welcome/api/apply-loan"
+3. API (3): "localhost:8000/Welcome/make-payment"
+
+```shell
+# SOC (5)
+pip3 install djangorestframework
+pip3 install markdown
+pip3 install django-filter
+```
+
 #### 13 June 2024
 
 1. Iteration 1 complete,

@@ -4,9 +4,24 @@ from urllib.parse import urlencode
 from django.urls import reverse
 from Authenticator.views import get_params
 from Authenticator.models import Person
-from .models import Loan, SavedState
+from .models import Loan, Bill, SavedState
 from .LoanService import *
+from rest_framework import viewsets, permissions
+from .serializers import LoanSerializer, BillSerializer
 
+
+class LoanViewSet(viewsets.ModelViewSet):
+    
+    queryset = Loan.objects.all().order_by('disbursement_date')
+    serializer_class = LoanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class BillViewSet(viewsets.ModelViewSet):
+    
+    queryset = Bill.objects.all().order_by('bill_date')
+    serializer_class = BillSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 # function ```get_params_2```
 def get_params_get(request, keys):
@@ -53,17 +68,18 @@ def index(request):
       messages.info(request, "Authentication unsuccessful")
       return redirect(request, 'Authenticator:login')
   else:
-    loan_service = LoanService()
     uid = len(Loan.objects.all()) + 1
+    loan_service = LoanService(uid)
     keys = ['loan_type', 'loan_amount', 'interest_rate', 'term_period', 'disbursement_date']
-    no1 = len(SavedState.objects.all())
-    ss = (SavedState.objects.all()[no1 - 1])
+    saved_states = SavedState.objects.all()
+    no1 = len(saved_states)
+    ss = saved_states[no1 - 1]
     uuid = ss.uuid
     sid = ss.sid
     params = get_params(request, keys)
     usr = Person.objects.get(uuid=uuid)
     if usr is not None:
-      if loan_service.validate_request(params, usr.annual_income):
+      if loan_service.validate_request(params, usr.annual_income, 30):
         loan = Loan.objects.create(uid=uid, uuid=usr, loan_type=params['loan_type'],
                         loan_amount=params['loan_amount'], 
                         interest_rate=params['interest_rate'], 
@@ -79,3 +95,21 @@ def index(request):
     else:
       messages.info(request, "Authentication unsuccessful")
       return redirect(request, 'Authenticator:login')
+
+
+def make_payment(request):
+  if request.method == "GET":
+    params = get_params_get(request, ['sid', 'uuid'])
+    return render(request, 'Welcome/make_payment.html', params)
+  else:
+    params = get_params(request, ['loan_id', 'amount'])
+    loan_id = params['loan_id']
+    amount = params['amount']
+    ls1 = Payment(loan_id)
+    try:
+      ls1.make_payment(amount)
+      messages.info(request, "Payment made successfully")
+      return render(request, 'Welcome/make_payment.html', params)
+    except ValueError as err:
+      print("ValueError", err)
+      redirect('Authenticator:login')

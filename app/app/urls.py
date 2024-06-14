@@ -17,6 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
+from rest_framework import routers
+from Welcome import views as welcome_views
+from Authenticator import views as authenticator_views
+
+
+router = routers.DefaultRouter()
+router.register(r'loans', welcome_views.LoanViewSet)
+router.register(r'bills', welcome_views.BillViewSet)
+router.register(r'persons', authenticator_views.PersonViewSet)
 
 
 urlpatterns = [
@@ -24,6 +33,8 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('', include('Authenticator.urls')),
-    path('Welcome/', include('Welcome.urls'))
+    path('', include(router.urls)),
+    path('api/', include('rest_framework.urls', namespace='rest_framework')),
+    path('Authenticator/', include('Authenticator.urls')),
+    path('Welcome/', include('Welcome.urls')),
 ]
