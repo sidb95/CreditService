@@ -17,6 +17,9 @@
         <button class="btn">
             <a href="{% url 'Welcome:make_payment' %}?sid={{sid}}&uuid={{uuid}}">Make Payment</a>
         </button>
+        <button class="btn">
+            <a href="{% url 'Welcome:transactions' %}?sid={{sid}}&uuid={{uuid}}">Transactions</a>
+        </button>
         <br>
         <h2>Loan Details</h2>
         {% if messages %}

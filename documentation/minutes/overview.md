@@ -10,6 +10,8 @@
 3. API (2): "localhost:8000/Welcome/api/apply-loan"
 4. API (3): "localhost:8000/Welcome/make-payment"
 5. SOC (2),
+6. implement API (4) get-statement,
+7. 
 
 ```shell
 # SOC (5)

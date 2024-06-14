@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+    <title>
+        CreditService
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body>
+    <section>
+        <div id="logout" style="float: right; margin-right: 10%;">
+            <span>{{ sid }}</span>
+            <span>{{ uid }}</span>
+            <button class="btn">
+                <a href="{% url 'Welcome:get_statement' %}?sid={{sid}}&uuid={{uuid}}">
+                    Back
+                </a>
+            </button>
+            <button class="btn">
+                <a href="{% url 'Authenticator:login'%}">Logout</a>
+            </button>
+        </div>
+
+        <h1>
+            Credit Service
+        </h1>
+        <div id="past_transactions">
+        {% if loan_id %}   
+            <table>
+                <thead>
+                    Past Transactions
+                </thead>
+                {% for transaction in past_transactions %}
+                <tr>
+                    {% for i in range(0, len(transaction)) %}
+                    <td>
+                        {{ transaction[i] }}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+        </div>
+        <div id="upcoming_transactions">
+            {% if loan_id %}   
+                <table>
+                    <thead>
+                        Upcoming Transactions
+                    </thead>
+                    {% for payment in due_payments %}
+                    <tr>
+                        {% for i in range(0, len(payment)) %}
+                        <td>
+                            {{ payment[i] }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+            </div>
+    </section>
+    <footer style="text-align: center;">Siddharth Bhatore</footer>
+</body>

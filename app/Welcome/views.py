@@ -113,3 +113,22 @@ def make_payment(request):
     except ValueError as err:
       print("ValueError", err)
       redirect('Authenticator:login')
+
+  def get_statement(request):
+    if request.method == "GET":
+      params = get_params_get(request, ['sid', 'uuid', 'loan_id'])
+      loan_id = params['loan_id']
+      if loan_id is not None or loan_id != "":
+        ls1 = Payment(loan_id)
+        context = {}
+        context['sid'] = params['sid']
+        context['uuid'] = params['uuid']
+        context['loan_id'] = loan_id
+        context['due_payments'] = ls1.getDueDates()
+        context['past_transactions'] = ls1.getPastTransactions()
+        base_url = reverse('Welcome:transactions')
+        query_string = urlencode(context)
+        url = '{}?{}'.format(base_url, query_string)
+        return redirect(url)
+      else:
+        return render(request, 'Welcome/get_statement.html', params)
