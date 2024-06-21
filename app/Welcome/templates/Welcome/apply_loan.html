@@ -12,7 +12,7 @@
             Credit Service
         </h1>
         {% if messages %}
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-success" role="alert">
             {% for message in messages %}
             <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
             {% endfor %}
@@ -20,7 +20,7 @@
         {% endif %}
         <button class="btn"><a href="{% url 'Welcome:index' %}?sid={{sid}}&uuid={{uuid}}">Back</a></button>
     </section>
-    <footer>
+    <footer style="text-align: center;">
         Siddharth Bhatore
     </footer>
 </body>

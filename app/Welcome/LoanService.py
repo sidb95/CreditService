@@ -203,7 +203,11 @@ class Payment(LoanService):
 
   # function ```make_payment```
   def make_payment(self, amount):
-    loan = Loan.objects.get(uid=self.getLoanId())
+    try:
+      loan = Loan.objects.get(uid=self.getLoanId())
+    except Loan.DoesNotExist as err:
+      print("Loan Id does not exist", err)
+      return
     no_bills = len(Bill.objects.all()) + 1
     bill = Bill.objects.create(uid=no_bills, loan_id=loan)
     bill.amount = amount
@@ -219,3 +223,4 @@ class Payment(LoanService):
       else:
         bill.principal_due -= left_off_amount
     bill.save()
+    return

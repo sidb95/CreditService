@@ -6,22 +6,7 @@ from Authenticator.views import get_params
 from Authenticator.models import Person
 from .models import Loan, Bill, SavedState
 from .LoanService import *
-from rest_framework import viewsets, permissions
-from .serializers import LoanSerializer, BillSerializer
 
-
-class LoanViewSet(viewsets.ModelViewSet):
-    
-    queryset = Loan.objects.all().order_by('disbursement_date')
-    serializer_class = LoanSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class BillViewSet(viewsets.ModelViewSet):
-    
-    queryset = Bill.objects.all().order_by('bill_date')
-    serializer_class = BillSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 # function ```get_params_2```
 def get_params_get(request, keys):
@@ -49,6 +34,7 @@ def apply_loan(request):
     ss = (SavedState.objects.all()[no1 - 1])
     uuid = ss.uuid
     sid = ss.sid
+    messages.info(request, "Loan request approved. Record created successfully")
     return render(request, 'Welcome/apply_loan.html', {'uuid':uuid, 'sid':sid})
 
 
@@ -91,7 +77,7 @@ def index(request):
         base_url = reverse('Welcome:apply_loan')
         query_string = urlencode({'sid':sid, 'uuid':uuid, 'messages':messages})
         url = '{}?{}'.format(base_url, query_string)
-        return redirect(url)
+        return redirect(request, url)
     else:
       messages.info(request, "Authentication unsuccessful")
       return redirect(request, 'Authenticator:login')
@@ -112,7 +98,7 @@ def make_payment(request):
       return render(request, 'Welcome/make_payment.html', params)
     except ValueError as err:
       print("ValueError", err)
-      redirect('Authenticator:login')
+      return redirect('Authenticator:login')
 
 
 def get_statement(request):
